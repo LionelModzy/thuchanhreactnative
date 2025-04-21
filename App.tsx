@@ -1,131 +1,86 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState } from 'react';
+import { View, Text, Button, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+// Import Project Components
+import Project1 from './Lab1/Project1';
+import Project2 from './Lab1/Project2';
+import Project3 from './Lab1/Project3';
+import Project4 from './Lab1/Project4';
+import Project5 from './Lab1/Project5';
+import Project6 from './Lab1/Project6';
+import Project7 from './Lab1/Project7';
+import Project8 from './Lab1/Project8';
+import Calculator from './Lab1/Calculator';
+export default function App() {
+  const [currentProject, setCurrentProject] = useState<number | null>(null);
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const renderProject = () => {
+    switch (currentProject) {
+      case 1: return <Project1 />;
+      case 2: return <Project2 />;
+      case 3: return <Project3 />;
+      case 4: return <Project4 />;
+      case 5: return <Project5 />;
+      case 6: return <Project6 />;
+      case 7: return <Project7 />;
+      case 8: return <Project8 />;
+      case 9: return <Calculator />;
+      default:
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <ScrollView contentContainerStyle={styles.menu}>
+      <Text style={styles.title}>Lab 1 - React Native</Text>
+      {Array.from({ length: 8 }, (_, i) => (
+        <View key={i + 1} style={styles.buttonContainer}>
+          <Button
+            title={`Project ${i + 1}`}
+            onPress={() => setCurrentProject(i + 1)}
+          />
+        </View>
+      ))}
+      
+      {/* Thêm nút Calculator ở đây */}
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Calculator"
+          onPress={() => setCurrentProject(9)}
+        />
+      </View>
+    </ScrollView>
   );
-}
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    }
   };
 
-  /*
-   * To keep the template simple and small we're adding padding to prevent view
-   * from rendering under the System UI.
-   * For bigger apps the recommendation is to use `react-native-safe-area-context`:
-   * https://github.com/AppAndFlow/react-native-safe-area-context
-   *
-   * You can read more about it here:
-   * https://github.com/react-native-community/discussions-and-proposals/discussions/827
-   */
-  const safePadding = '5%';
-
   return (
-    <View style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        style={backgroundStyle}>
-        <View style={{paddingRight: safePadding}}>
-          <Header/>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#ADD8E6' }}>  {/* Màu nền xanh dương nhạt */}
+
+      {renderProject()}
+      {currentProject && (
+        <View style={styles.backButton}>
+          <Button title="← Back to Menu" onPress={() => setCurrentProject(null)} />
         </View>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            paddingHorizontal: safePadding,
-            paddingBottom: safePadding,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </View>
+      )}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  menu: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  title: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  buttonContainer: {
+    marginVertical: 10,
+    width: '80%',
   },
-  highlight: {
-    fontWeight: '700',
+  backButton: {
+    padding: 10,
   },
 });
-
-export default App;
