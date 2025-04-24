@@ -14,7 +14,7 @@ const buttonSize = (screen.width - 40) / 4;
 export default function Calculator() {
   const [history, setHistory] = useState('');
   const [result, setResult] = useState('');
-  const [darkMode, setDarkMode] = useState(false); // Mặc định là light theme (false)
+  const [darkMode, setDarkMode] = useState(false); 
 
   const handlePress = (val) => {
     if (val === 'C') {
@@ -139,10 +139,10 @@ const styles = StyleSheet.create({
   themeToggle: {
     position: 'absolute',
     top: 20,
-    left: 20, // từ right -> left để icon nằm bên trái
+    left: 20, 
     zIndex: 1,
     padding: 10,
-    backgroundColor: '#ccc', // hoặc màu bạn muốn
+    backgroundColor: '#ccc', 
     borderRadius: 30,
     borderWidth: 2,
     borderColor: '#999',
