@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
-// Định nghĩa các style cho container và square
 const styles = StyleSheet.create({
   container: { 
     backgroundColor: '#fff',
@@ -14,11 +13,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 20,
-    borderRadius: 10, // Tùy chọn thêm một chút góc bo
+    borderRadius: 10, 
   },
 });
 
-// Component Square, có thể nhận props `text` và `bgColor`
 const Square = ({ text, bgColor = '#7ce0f9' }) => (
   <View style={[styles.box, { backgroundColor: bgColor }]}>
     <Text>{text}</Text>
@@ -27,7 +25,6 @@ const Square = ({ text, bgColor = '#7ce0f9' }) => (
 
 const data = Array.from({ length: 15 }, (_, i) => i + 1); // Tạo mảng số từ 1 đến 15
 
-// Component Project6
 export default function Project6() {
   return (
     <ScrollView style={styles.container}>
