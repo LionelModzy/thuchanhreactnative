@@ -2,34 +2,33 @@ import { View, StyleSheet } from "react-native";
 import { Text, TextInput, Button } from "react-native-paper";
 import { useState } from "react";
 
-const AddNewService = ({ navigation }) => {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+const EditService = ({ navigation, route }) => {
+  const { service } = route.params;
+  const [name, setName] = useState(service.name);
+  const [price, setPrice] = useState(service.price.toString());
 
-  const handleAdd = () => {
-    // TODO: Thêm logic lưu dịch vụ mới
-    navigation.navigate("Services");
+  const handleUpdate = () => {
+    // TODO: Cập nhật dịch vụ
+    navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Service name *</Text>
       <TextInput
-        placeholder="Input a service name"
         value={name}
         onChangeText={setName}
         style={styles.input}
       />
       <Text style={styles.title}>Price *</Text>
       <TextInput
-        placeholder="0"
         value={price}
         onChangeText={setPrice}
         keyboardType="numeric"
         style={styles.input}
       />
-      <Button mode="contained" style={styles.button} onPress={handleAdd}>
-        Add
+      <Button mode="contained" style={styles.button} onPress={handleUpdate}>
+        Update
       </Button>
     </View>
   );
@@ -42,4 +41,4 @@ const styles = StyleSheet.create({
   button: { marginTop: 30, backgroundColor: "#f06277" },
 });
 
-export default AddNewService;
+export default EditService; 

@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-const Customer = () => {
+const Customers = () => {
   return (
     <View>
       <Text>Customer Screens</Text>
@@ -8,4 +8,4 @@ const Customer = () => {
   );
 };
 
-export default Customer;
+export default Customers; 
