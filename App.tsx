@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import Lab1Screen from './Lab1/Lab1Screen'; // Tách logic Lab1 vào file riêng
 import Lab2App from './Lab2/App';           // App.js từ Lab2
-
+import Lab3App from './Lab3/App';
 export default function App() {
-  const [lab, setLab] = useState<null | 'Lab1' | 'Lab2'>(null);
+  const [lab, setLab] = useState<null | 'Lab1' | 'Lab2' | 'Lab3'>(null);
 
   const renderLab = () => {
     switch (lab) {
@@ -12,6 +12,8 @@ export default function App() {
         return <Lab1Screen goBack={() => setLab(null)} />;
       case 'Lab2':
         return <Lab2App />;
+      case 'Lab3':
+        return <Lab3App />;
       default:
         return (
           <SafeAreaView style={styles.container}>
@@ -21,6 +23,9 @@ export default function App() {
             </View>
             <View style={styles.button}>
               <Button title="Lab 2" onPress={() => setLab('Lab2')} />
+            </View>
+            <View style={styles.button}>
+              <Button title="Lab 3" onPress={() => setLab('Lab3')} />
             </View>
           </SafeAreaView>
         );

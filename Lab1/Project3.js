@@ -9,7 +9,7 @@ export default function Project3() {
       <Button
         text="Say goodbye"
         onPress={() => Alert.alert('Goodbye!')}
-        buttonStyle={{ backgroundColor: '#4dc2c2' }} // Kiểu tùy chỉnh cho nút thứ hai
+        buttonStyle={{ backgroundColor: '#4dc2c2' }} 
       />
     </View>
   );

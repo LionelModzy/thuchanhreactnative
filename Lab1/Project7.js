@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInput, Text, View, StyleSheet, Button as RNButton } from 'react-native'; // Đổi tên Button
+import { TextInput, Text, View, StyleSheet, Button as RNButton } from 'react-native'; 
 
 const styles = StyleSheet.create({
   container: { padding: 20 },
@@ -25,11 +25,11 @@ export default function Project7() {
         onChangeText={(text) => setName(text)}
         value={name}
       />
-      <RNButton // Đổi tên thành RNButton
+      <RNButton 
         title="Say Hello"
         onPress={() => {
           alert(`Hello, ${name}!`);
-          setName(''); // Reset lại giá trị input sau khi bấm
+          setName(''); 
         }}
       />
     </View>

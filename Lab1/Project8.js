@@ -26,10 +26,9 @@ const styles = StyleSheet.create({
   },
 });
 
-// Cập nhật hàm groupPeopleByLastName để đảm bảo dữ liệu trả về đúng
 const groupPeopleByLastName = (_data) => {
   const groupedData = _data.reduce((acc, item) => {
-    const group = item.name.last[0].toUpperCase();  // Giả sử ta nhóm theo chữ cái đầu của last name
+    const group = item.name.last[0].toUpperCase();  
     if (!acc[group]) {
       acc[group] = { title: group, data: [] };
     }
@@ -38,7 +37,7 @@ const groupPeopleByLastName = (_data) => {
   }, {});
 
   return Object.values(groupedData).sort((a, b) =>
-    a.title.localeCompare(b.title)  // Đảm bảo rằng chúng ta so sánh các chữ cái đúng cách
+    a.title.localeCompare(b.title)  
   );
 };
 
@@ -52,8 +51,8 @@ export default function Project8() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SectionList
-        sections={groupPeopleByLastName(PEOPLE)}  // Đảm bảo dữ liệu đã được nhóm đúng cách
-        keyExtractor={(item) => `${item.name.first}-${item.name.last}`}  // Khóa duy nhất cho mỗi item
+        sections={groupPeopleByLastName(PEOPLE)}  
+        keyExtractor={(item) => `${item.name.first}-${item.name.last}`}  
         renderSectionHeader={({ section }) => (
           <View style={styles.sectionHeader}>
             <Text>{section.title}</Text>
@@ -66,7 +65,7 @@ export default function Project8() {
             </Text>
           </View>
         )}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}  // Thêm ngăn cách giữa các items
+        ItemSeparatorComponent={() => <View style={styles.separator} />}  
       />
     </SafeAreaView>
   );
