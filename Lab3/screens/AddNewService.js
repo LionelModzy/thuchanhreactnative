@@ -1,13 +1,24 @@
 import { View, StyleSheet } from "react-native";
 import { Text, TextInput, Button } from "react-native-paper";
 import { useState } from "react";
+import firestore from "@react-native-firebase/firestore";
+import { useMyContextController } from "../store";
 
 const AddNewService = ({ navigation }) => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const [controller] = useMyContextController();
+  const { userLogin } = controller;
 
-  const handleAdd = () => {
-    // TODO: Thêm logic lưu dịch vụ mới
+  const handleAdd = async () => {
+    if (!name || !price) return;
+    await firestore().collection("SERVICES").add({
+      name,
+      price: Number(price),
+      creator: userLogin?.fullName || "",
+      createdAt: new Date(),
+      update: new Date(),
+    });
     navigation.navigate("Services");
   };
 

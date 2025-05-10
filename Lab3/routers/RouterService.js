@@ -16,16 +16,43 @@ const RouterService = () => {
     <Stack.Navigator
       initialRouteName="Services"
       screenOptions={{
-        title: (userLogin != null) && (userLogin.name),
-        headerTitleAlign: "center",
-        headerStyle: { backgroundColor: "pink" },
-        headerRight: (props) => <IconButton icon={"account"} />,
+        headerStyle: { backgroundColor: "#f06277" },
+        headerTintColor: "#fff",
       }}
     >
-      <Stack.Screen name="Services" component={Services} />
-      <Stack.Screen name="AddNewService" component={AddNewService} />
-      <Stack.Screen name="ServiceDetail" component={ServiceDetail} />
-      <Stack.Screen name="EditService" component={EditService} />
+      <Stack.Screen 
+        name="Services" 
+        component={Services}
+        options={{
+          title: userLogin?.fullName?.toUpperCase() || "",
+          headerTitleAlign: "left",
+          headerRight: () => <IconButton icon="account" color="#fff" />,
+        }}
+      />
+      <Stack.Screen 
+        name="AddNewService" 
+        component={AddNewService}
+        options={{ 
+          title: "Add New Service",
+          headerTitleAlign: "center",
+        }}
+      />
+      <Stack.Screen 
+        name="ServiceDetail" 
+        component={ServiceDetail}
+        options={{ 
+          title: "Service Detail",
+          headerTitleAlign: "center",
+        }}
+      />
+      <Stack.Screen 
+        name="EditService" 
+        component={EditService}
+        options={{ 
+          title: "Edit Service",
+          headerTitleAlign: "center",
+        }}
+      />
     </Stack.Navigator>
   );
 };
