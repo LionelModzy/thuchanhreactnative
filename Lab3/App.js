@@ -14,34 +14,65 @@ const App = () => {
   const USERS = firestore().collection("USERS");
   const admin = {
     fullName: "thanh",
-    email: "abc@gmail.com",
+    email: "thanh@gmail.com",
     password: "220703",
     phone: "0391111113",
     address: "Binh duong",
     role: "admin",
   };
+
   useEffect(() => {
     const checkAndCreateAdmin = async () => {
       try {
+        console.log("🔍 Checking admin account...");
+        
+        // Kiểm tra trong Firestore
         const adminDoc = await USERS.doc(admin.email).get();
-        const exists = typeof adminDoc.exists === "function" ? adminDoc.exists() : adminDoc.exists;
-        if (!exists) {
+        console.log("📄 Firestore check result:", adminDoc.exists ? "exists" : "not exists");
+        
+        if (!adminDoc.exists) {
           try {
-            await auth().createUserWithEmailAndPassword(admin.email, admin.password);
-            await USERS.doc(admin.email).set(admin);
+            // Tạo user trong Authentication
+            console.log("👤 Creating admin in Auth...");
+            const userCredential = await auth().createUserWithEmailAndPassword(admin.email, admin.password);
+            console.log("✅ Admin account created in Auth:", userCredential.user.uid);
+            
+            // Tạo document trong Firestore
+            console.log("📝 Saving admin data to Firestore...");
+            await USERS.doc(admin.email).set({
+              ...admin,
+              uid: userCredential.user.uid,
+              createdAt: firestore.FieldValue.serverTimestamp()
+            });
+            console.log("✅ Admin data saved to Firestore");
           } catch (e) {
+            console.error("❌ Error creating admin:", e.code, e.message);
             if (e.code === 'auth/email-already-in-use') {
-              await USERS.doc(admin.email).set(admin);
+              console.log("⚠️ Admin already exists in Auth");
+              // Nếu user đã tồn tại trong Auth nhưng chưa có trong Firestore
+              try {
+                await USERS.doc(admin.email).set({
+                  ...admin,
+                  createdAt: firestore.FieldValue.serverTimestamp()
+                });
+                console.log("✅ Admin data saved to Firestore");
+              } catch (firestoreError) {
+                console.error("❌ Error saving to Firestore:", firestoreError);
+              }
             }
           }
+        } else {
+          console.log("ℹ️ Admin document already exists in Firestore");
         }
       } catch (err) {
-        // Có thể log lỗi nếu muốn
+        console.error("❌ Firestore error:", err.code, err.message);
       }
     };
+
     checkAndCreateAdmin();
   }, []);
 
+  // ✅ PHẢI CÓ RETURN DƯỚI ĐÂY
   return (
     <MyContextControllerProvider>
       <NavigationContainer>
@@ -50,5 +81,6 @@ const App = () => {
     </MyContextControllerProvider>
   );
 };
+
 
 export default App;

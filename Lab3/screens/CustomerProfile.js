@@ -5,7 +5,7 @@ import auth from '@react-native-firebase/auth';
 import { useMyContextController, logout } from '../store';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 
-const Setting = () => {
+const CustomerProfile = () => {
   const [controller, dispatch] = useMyContextController();
   const { userLogin } = controller;
   const navigation = useNavigation();
@@ -75,16 +75,12 @@ const Setting = () => {
     }
 
     try {
-      // Reauthenticate user before changing password
       const credential = auth.EmailAuthProvider.credential(
         userLogin.email,
         currentPassword
       );
-      
       await auth().currentUser.reauthenticateWithCredential(credential);
       await auth().currentUser.updatePassword(newPassword);
-
-      // Update password in Firestore
       await firestore()
         .collection('USERS')
         .doc(userLogin.email)
@@ -92,7 +88,6 @@ const Setting = () => {
           password: newPassword,
           updatedAt: firestore.FieldValue.serverTimestamp()
         });
-
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
@@ -105,24 +100,18 @@ const Setting = () => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }}>
       <Text style={styles.title}>Profile Management</Text>
-
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Profile Information</Text>
-        
         {!isEditing ? (
           <View style={styles.profileInfo}>
             <Text style={styles.label}>Name:</Text>
             <Text style={styles.value}>{userLogin.fullName}</Text>
-            
             <Text style={styles.label}>Email:</Text>
             <Text style={styles.value}>{userLogin.email}</Text>
-            
             <Text style={styles.label}>Phone:</Text>
             <Text style={styles.value}>{userLogin.phone}</Text>
-            
             <Text style={styles.label}>Address:</Text>
             <Text style={styles.value}>{userLogin.address}</Text>
-            
             <TouchableOpacity 
               style={[styles.button, styles.editButton]}
               onPress={() => {
@@ -145,7 +134,6 @@ const Setting = () => {
               value={editedProfile.fullName}
               onChangeText={(text) => setEditedProfile({ ...editedProfile, fullName: text })}
             />
-            
             <TextInput
               style={styles.input}
               placeholder="Phone"
@@ -153,14 +141,12 @@ const Setting = () => {
               onChangeText={(text) => setEditedProfile({ ...editedProfile, phone: text })}
               keyboardType="phone-pad"
             />
-            
             <TextInput
               style={styles.input}
               placeholder="Address"
               value={editedProfile.address}
               onChangeText={(text) => setEditedProfile({ ...editedProfile, address: text })}
             />
-            
             <View style={styles.buttonGroup}>
               <TouchableOpacity 
                 style={[styles.button, styles.cancelButton]}
@@ -168,7 +154,6 @@ const Setting = () => {
               >
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
-              
               <TouchableOpacity 
                 style={[styles.button, styles.saveButton]}
                 onPress={handleUpdateProfile}
@@ -179,10 +164,8 @@ const Setting = () => {
           </View>
         )}
       </View>
-
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Change Password</Text>
-        
         <View style={styles.passwordForm}>
           <TextInput
             style={styles.input}
@@ -191,7 +174,6 @@ const Setting = () => {
             onChangeText={setCurrentPassword}
             secureTextEntry
           />
-          
           <TextInput
             style={styles.input}
             placeholder="New Password"
@@ -199,7 +181,6 @@ const Setting = () => {
             onChangeText={setNewPassword}
             secureTextEntry
           />
-          
           <TextInput
             style={styles.input}
             placeholder="Confirm New Password"
@@ -207,7 +188,6 @@ const Setting = () => {
             onChangeText={setConfirmPassword}
             secureTextEntry
           />
-          
           <TouchableOpacity 
             style={[styles.button, styles.changePasswordButton]}
             onPress={handleChangePassword}
@@ -216,7 +196,6 @@ const Setting = () => {
           </TouchableOpacity>
         </View>
       </View>
-
       <TouchableOpacity 
         style={[styles.button, { backgroundColor: '#f44336', marginTop: 20 }]}
         onPress={async () => {
@@ -318,4 +297,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Setting;
+export default CustomerProfile; 

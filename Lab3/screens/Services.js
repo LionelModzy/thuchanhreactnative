@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
 import { useMyContextController } from "../store";
-import { Image, View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { IconButton } from "react-native-paper";
+import { Image, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Alert } from "react-native";
+import { IconButton, Button } from "react-native-paper";
+import { launchImageLibrary } from 'react-native-image-picker';
 
-const Services = ({ navigation }) => {
+const Services = ({ navigation, showProfileModal, setShowProfileModal }) => {
   const [services, setServices] = useState([]);
-  // const [controller] = useMyContextController();
-  // const { userLogin } = controller;
+  const [controller, setController] = useMyContextController();
+  const { userLogin } = controller;
+  const [editProfile, setEditProfile] = useState({
+    fullName: userLogin?.fullName || '',
+    phone: userLogin?.phone || '',
+    avatar: userLogin?.avatar || '',
+  });
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -19,9 +26,56 @@ const Services = ({ navigation }) => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (showProfileModal) {
+      setEditProfile({
+        fullName: userLogin?.fullName || '',
+        phone: userLogin?.phone || '',
+        avatar: userLogin?.avatar || '',
+      });
+    }
+  }, [showProfileModal]);
+
+  const handlePickAvatar = async () => {
+    launchImageLibrary(
+      { mediaType: 'photo', quality: 0.5 },
+      (response) => {
+        if (response.didCancel) return;
+        if (response.assets && response.assets[0].uri) {
+          setEditProfile({ ...editProfile, avatar: response.assets[0].uri });
+        }
+      }
+    );
+  };
+
+  const handleUpdateProfile = async () => {
+    setUploading(true);
+    try {
+      await firestore()
+        .collection('USERS')
+        .doc(userLogin.email)
+        .update({
+          fullName: editProfile.fullName,
+          phone: editProfile.phone,
+          avatar: editProfile.avatar,
+        });
+      setController({
+        ...controller,
+        userLogin: {
+          ...userLogin,
+          ...editProfile,
+        },
+      });
+      setShowProfileModal(false);
+      Alert.alert('Success', 'Profile updated!');
+    } catch (e) {
+      Alert.alert('Error', e.message);
+    }
+    setUploading(false);
+  };
+
   return (
     <ScrollView>
-      {/* Đã xóa dòng hiển thị tên user màu hồng ở đây */}
       <View style={{ flex: 1 }}>
         <Image
           source={require("../asset/logo.jpg")}
@@ -55,6 +109,47 @@ const Services = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
+      <Modal
+        visible={showProfileModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowProfileModal(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ backgroundColor: '#fff', borderRadius: 16, padding: 24, width: 320 }}>
+            <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 16 }}>User Info</Text>
+            <TouchableOpacity onPress={handlePickAvatar} style={{ alignSelf: 'center' }}>
+              {editProfile.avatar ? (
+                <Image source={{ uri: editProfile.avatar }} style={{ width: 80, height: 80, borderRadius: 40, marginBottom: 12 }} />
+              ) : (
+                <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#eee', marginBottom: 12, justifyContent: 'center', alignItems: 'center' }}>
+                  <Text>Pick
+Avatar</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <TextInput
+              style={{ borderWidth: 1, borderColor: '#ddd', borderRadius: 6, padding: 8, marginBottom: 10 }}
+              placeholder="Full Name"
+              value={editProfile.fullName}
+              onChangeText={text => setEditProfile({ ...editProfile, fullName: text })}
+            />
+            <TextInput
+              style={{ borderWidth: 1, borderColor: '#ddd', borderRadius: 6, padding: 8, marginBottom: 10 }}
+              placeholder="Phone"
+              value={editProfile.phone}
+              onChangeText={text => setEditProfile({ ...editProfile, phone: text })}
+              keyboardType="phone-pad"
+            />
+            <Button mode="contained" onPress={handleUpdateProfile} loading={uploading} style={{ marginBottom: 8 }}>
+              Save
+            </Button>
+            <Button mode="outlined" onPress={() => setShowProfileModal(false)}>
+              Cancel
+            </Button>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };

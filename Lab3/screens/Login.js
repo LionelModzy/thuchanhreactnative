@@ -17,9 +17,9 @@ const Login = ({ navigation }) => {
   useEffect(() => {
     if (userLogin != null) {
       if (userLogin.role === "admin") {
-        navigation.navigate("Admin");
+        navigation.replace("Admin");
       } else if (userLogin.role === "customer") {
-        navigation.navigate("Customer");
+        navigation.replace("CustomerTab");
       }
     }
   }, [userLogin]);

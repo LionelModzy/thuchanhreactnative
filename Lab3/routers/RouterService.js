@@ -5,28 +5,38 @@ import ServiceDetail from "../screens/ServiceDetail";
 import EditService from "../screens/EditService";
 import { useMyContextController } from "../store";
 import { IconButton } from "react-native-paper";
+import React, { useState } from "react";
 
 const Stack = createStackNavigator();
 
 const RouterService = () => {
   const [controller] = useMyContextController();
   const { userLogin } = controller;
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   return (
     <Stack.Navigator
       initialRouteName="Services"
       screenOptions={{
-        headerStyle: { backgroundColor: "#f06277" },
+        headerStyle: { backgroundColor: "#2196F3" },
         headerTintColor: "#fff",
       }}
     >
       <Stack.Screen 
         name="Services" 
-        component={Services}
+        children={props => (
+          <Services {...props} showProfileModal={showProfileModal} setShowProfileModal={setShowProfileModal} />
+        )}
         options={{
           title: userLogin?.fullName?.toUpperCase() || "",
           headerTitleAlign: "left",
-          headerRight: () => <IconButton icon="account" color="#fff" />,
+          headerRight: () => (
+            <IconButton 
+              icon="account" 
+              color="#fff" 
+              onPress={() => setShowProfileModal(true)}
+            />
+          ),
         }}
       />
       <Stack.Screen 

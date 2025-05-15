@@ -1,10 +1,8 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import RouterService from "../routers/RouterService";
-import Transaction from "./Transactions";
-import Customer from "./Customer";
-import Setting from "./Setting";
-import Customers from "./Customers";
 import RouterTransaction from "../routers/RouterTransaction";
+import RouterCustomer from "../routers/RouterCustomer";
+import RouterSetting from "../routers/RouterSetting";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -14,23 +12,34 @@ const Admin = () => {
       <Tab.Screen
         name="RouterService"
         component={RouterService}
-        options={{ title: "Home", tabBarIcon: "home" }}
+        options={{ 
+          title: "Services",
+          tabBarIcon: "home" 
+        }}
       />
       <Tab.Screen
         name="RouterTransaction"
         component={RouterTransaction}
-        
-        options={{ title: "Transactionss",tabBarIcon: "cash" }}
+        options={{ 
+          title: "Transactions",
+          tabBarIcon: "cash" 
+        }}
       />
       <Tab.Screen
-        name="Customers"
-        component={Customers}
-        options={{ tabBarIcon: "account" }}
+        name="RouterCustomer"
+        component={RouterCustomer}
+        options={{ 
+          title: "Customers",
+          tabBarIcon: "account" 
+        }}
       />
       <Tab.Screen
-        name="Setting"
-        component={Setting}
-        options={{ tabBarIcon: "cog" }}
+        name="RouterSetting"
+        component={RouterSetting}
+        options={{ 
+          title: "Profile",
+          tabBarIcon: "cog" 
+        }}
       />
     </Tab.Navigator>
   );

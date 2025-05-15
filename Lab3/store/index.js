@@ -47,23 +47,48 @@ const useMyContextController = () => {
 }
 const USERS = firestore().collection("USERS")
 
-const login = (dispatch, email, password)=>{
-    auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(reponse => USERS.doc(email).onSnapshot(
-            u=> dispatch({
-                type: "USER_LOGIN",
-                value: u.data()
-            })
-        )
-    )
-    .catch(e => Alert.alert("Sai email va password"))
-}
-const logout = (dispatch) => {
-    auth().signOut()
-    .then(()=> dispatch({
-        type: "LOGOUT"
-    }))
+const login = async (dispatch, email, password) => {
+  try {
+    console.log("🔑 Attempting login...");
+    
+    // Đăng nhập Authentication
+    const userCredential = await auth().signInWithEmailAndPassword(email, password);
+    console.log("✅ Auth successful:", userCredential.user.uid);
+    
+    // Lấy thông tin từ Firestore
+    const userDoc = await USERS.doc(email).get();
+    console.log("📄 Firestore check result:", userDoc.exists ? "exists" : "not exists");
+    
+    if (!userDoc.exists) {
+      throw new Error("User data not found in Firestore");
+    }
+    
+    const userData = userDoc.data();
+    console.log("👤 User role:", userData.role);
+    
+    dispatch({
+      type: "USER_LOGIN",
+      value: userData
+    });
+    
+    console.log("✅ Login successful");
+  } catch (e) {
+    console.error("❌ Login error:", e.code, e.message);
+    Alert.alert("Error", e.message);
+  }
+};
+const logout = async (dispatch) => {
+  try {
+    console.log("🔒 Attempting logout...");
+    await auth().signOut();
+    dispatch({
+      type: "LOGOUT"
+    });
+    console.log("✅ Logout successful");
+  } catch (e) {
+    console.error("❌ Logout error:", e.code, e.message);
+    Alert.alert("Error", e.message);
+  }
 }
 
 
